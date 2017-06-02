@@ -1,0 +1,94 @@
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div class="jumbotron" style="text-align:center">
+  <h1>KlenkoKlock</h1>
+	<div style="font-size:40px"><span id="showmns">00</span>:<span id="showscs">00</span></div>
+  <p><a class="btn btn-primary btn-lg" href="#" id="one" role="button">+1</a>
+  <span><a class="btn btn-primary btn-lg" href="#">+5</a></span>
+  <span><a class="btn btn-primary btn-lg" href="#">+10</a></span>
+  <span><a class="btn btn-primary btn-lg" href="#">+15</a></span>
+  </p>
+  <p><a class="btn btn-primary btn-lg" style="background-color:green" href="#" id="startstop" role="button">Start/Stop</a>
+  <span><a class="btn btn-primary btn-lg" id="clr" href="#">Clear</a></span></p>
+</div>
+<form>Minutes:
+    <input type="text" id="mns" name="mns" value="1" size="3" maxlength="3" />&nbsp; &nbsp; Seconds:
+    <input type="text" id="scs" name="scs" value="0" size="2" maxlength="2" />
+    <br/>
+    <input type="button" id="btnct" value="Add / Start" />
+</form>Countdown Timer: &nbsp; <span id="showmns">00</span>:<span id="showscs">00</span>
+
+<script>
+var mns = document.getElementById('mns');
+var scs = document.getElementById('scs');
+var btcnt = document.getElementById('btnct');
+var showmns = document.getElementById('showmns');
+var showscs = document.getElementById('showscs');
+var clr = document.getElementById('clr');
+var startstop = document.getElementById('startstop');
+var one = document.getElementById('one');
+
+var count = 0;
+var pause = false;
+var started = false;
+
+
+function pad2(n) {
+    return n < 10 ? '0' + n : n;
+}
+
+function show() {
+    var s = count % 60;
+    var m = Math.floor(count / 60);
+    showmns.innerHTML = pad2(m);
+    showscs.innerHTML = pad2(s);
+}
+
+function timer() {
+    show();
+    if (!pause && count-- > 0) {
+        setTimeout(timer, 1000);
+    }
+}
+
+clr.addEventListener('click', function() {
+	started = false;
+	count = 0;
+});
+
+one.addEventListener('click', function() {
+	count += 60;
+	show();
+});
+
+startstop.addEventListener('click', function () {
+    var s = parseInt(showmns.innerHTML, 10);
+    var m = parseInt(showscs.innerHTML, 10);
+    if (isNaN(s) || isNaN(m)) return;
+    showmns.innerHTML = s;
+    showscs.innerHTML = m;
+ 
+    var current = count;
+    count += (m * 60) + s;
+    
+	if (!started || pause) {
+		timer();
+		started = true;
+		pause = false;
+	} else {
+		pause = true
+	}
+    // only restart the counter loop if it was previously stopped
+    //if (current <= 0) {
+    //    timer();
+    //} else {
+    //    show();
+    //}
+});
+</script>
+</body>
