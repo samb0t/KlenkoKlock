@@ -6,22 +6,18 @@
 
 <body>
 <div class="jumbotron" style="text-align:center">
-  <h1>KlenkoKlock</h1>
-	<div style="font-size:40px"><span id="showmns">00</span>:<span id="showscs">00</span></div>
-  <p><a class="btn btn-primary btn-lg" href="#" id="one" role="button">+1</a>
-  <span><a class="btn btn-primary btn-lg" href="#">+5</a></span>
-  <span><a class="btn btn-primary btn-lg" href="#">+10</a></span>
-  <span><a class="btn btn-primary btn-lg" href="#">+15</a></span>
-  </p>
-  <p><a class="btn btn-primary btn-lg" style="background-color:green" href="#" id="startstop" role="button">Start/Stop</a>
-  <span><a class="btn btn-primary btn-lg" id="clr" href="#">Clear</a></span></p>
+    <h1>KlenkoKlock</h1>
+    <div style="font-size:40px"><span id="showmns">00</span>:<span id="showscs">00</span></div>
+    <p><a class="btn btn-primary btn-lg" href="#" id="one" role="button">+1</a>
+    <span><a class="btn btn-primary btn-lg" id="five" href="#">+5</a></span>
+    <span><a class="btn btn-primary btn-lg" id="ten" href="#">+10</a></span>
+    <span><a class="btn btn-primary btn-lg" id="twenty" href="#">+20</a></span>
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="#" id="startstop" role="button">Start/Stop</a>
+    <span id="next"><a class="btn btn-primary btn-lg" id="nxt" href="#">Load Next</a></span>
+    <span id="clear"><a class="btn btn-primary btn-lg" id="clr" href="#">Clear</a></span></p>
+    <div id="timer-queue"></div>
 </div>
-<form>Minutes:
-    <input type="text" id="mns" name="mns" value="1" size="3" maxlength="3" />&nbsp; &nbsp; Seconds:
-    <input type="text" id="scs" name="scs" value="0" size="2" maxlength="2" />
-    <br/>
-    <input type="button" id="btnct" value="Add / Start" />
-</form>Countdown Timer: &nbsp; <span id="showmns">00</span>:<span id="showscs">00</span>
 
 <script>
 var mns = document.getElementById('mns');
@@ -30,8 +26,13 @@ var btcnt = document.getElementById('btnct');
 var showmns = document.getElementById('showmns');
 var showscs = document.getElementById('showscs');
 var clr = document.getElementById('clr');
+var nxt = document.getElementById('nxt');
 var startstop = document.getElementById('startstop');
 var one = document.getElementById('one');
+var five = document.getElementById('five');
+var ten = document.getElementById('ten');
+var twenty = document.getElementById('twenty');
+var audio = new Audio('./notification.mp3');
 
 var count = 0;
 var pause = false;
@@ -51,44 +52,61 @@ function show() {
 
 function timer() {
     show();
-    if (!pause && count-- > 0) {
-        setTimeout(timer, 1000);
+    if (!pause) {
+        if(count-- > 0) {
+            setTimeout(timer, 1000);
+        } else {
+            started = false;
+            pause = false;
+            count = 0;
+            audio.play();
+        }
     }
 }
 
 clr.addEventListener('click', function() {
-	started = false;
-	count = 0;
+    started = false;
+    count = 0;
+    var q = $('#timer-queue').empty();
+});
+
+nxt.addEventListener('click', function() {
+    var q = $('#timer-queue')[0];
+    if (q.childNodes && q.childNodes.length > 0) {
+        var m = parseInt(q.childNodes[0].innerHTML);
+        var current = count;
+        count += (m * 60);
+        show();
+        q.childNodes[0].remove();
+    }
 });
 
 one.addEventListener('click', function() {
-	count += 60;
-	show();
+    $("#timer-queue").append("<span class='label label-primary'>1</span>");
+});
+
+five.addEventListener('click', function() {
+    $("#timer-queue").append("<span class='label label-primary'>5</span>");
+});
+
+ten.addEventListener('click', function() {
+    $("#timer-queue").append("<span class='label label-primary'>10</span>");
+});
+
+twenty.addEventListener('click', function() {
+    $("#timer-queue").append("<span class='label label-primary'>20</span>");
 });
 
 startstop.addEventListener('click', function () {
-    var s = parseInt(showmns.innerHTML, 10);
-    var m = parseInt(showscs.innerHTML, 10);
-    if (isNaN(s) || isNaN(m)) return;
-    showmns.innerHTML = s;
-    showscs.innerHTML = m;
- 
-    var current = count;
-    count += (m * 60) + s;
-    
-	if (!started || pause) {
-		timer();
-		started = true;
-		pause = false;
-	} else {
-		pause = true
-	}
-    // only restart the counter loop if it was previously stopped
-    //if (current <= 0) {
-    //    timer();
-    //} else {
-    //    show();
-    //}
+    if (count > 0) {
+        if (!started || pause) {
+            started = true;
+            pause = false;
+            timer();
+        } else {
+            pause = true
+        }
+    }
 });
 </script>
 </body>
