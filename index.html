@@ -16,6 +16,7 @@
     <p><a class="btn btn-primary btn-lg" href="#" id="one" role="button">+1</a>
     <span><a class="btn btn-primary btn-lg" id="five" href="#">+5</a></span>
     <span><a class="btn btn-primary btn-lg" id="ten" href="#">+10</a></span>
+    <span><a class="btn btn-primary btn-lg" id="fifteen" href="#">+15</a></span>
     <span><a class="btn btn-primary btn-lg" id="twenty" href="#">+20</a></span>
     </p>
     <p><a class="btn btn-primary btn-lg" href="#" id="startstop" role="button">Start/Stop</a>
@@ -36,6 +37,7 @@ var startstop = document.getElementById('startstop');
 var one = document.getElementById('one');
 var five = document.getElementById('five');
 var ten = document.getElementById('ten');
+var fifteen = document.getElementById('fifteen');
 var twenty = document.getElementById('twenty');
 var audio = new Audio('./notification.mp3');
 
@@ -70,49 +72,53 @@ function timer() {
 }
 
 clr.addEventListener('click', function() {
-        started = false;
-        count = 0;
-        var q = $('#timer-queue').empty();
-        });
+    started = false;
+    count = 0;
+    var q = $('#timer-queue').empty();
+});
 
 nxt.addEventListener('click', function() {
-        var q = $('#timer-queue')[0];
-        if (q.childNodes && q.childNodes.length > 0) {
-        var m = parseInt(q.childNodes[0].innerHTML);
-        var current = count;
-        count += (m * 60);
-        show();
-        q.childNodes[0].remove();
-        }
-        });
+    var q = $('#timer-queue')[0];
+    if (q.childNodes && q.childNodes.length > 0) {
+    var m = parseInt(q.childNodes[0].innerHTML);
+    var current = count;
+    count += (m * 60);
+    show();
+    q.childNodes[0].remove();
+    }
+});
 
 one.addEventListener('click', function() {
-        $("#timer-queue").append("<span class='label label-primary'>1</span>");
-        });
+    $("#timer-queue").append("<span class='label label-primary'>1</span>");
+});
 
 five.addEventListener('click', function() {
-        $("#timer-queue").append("<span class='label label-primary'>5</span>");
-        });
+    $("#timer-queue").append("<span class='label label-primary'>5</span>");
+});
 
 ten.addEventListener('click', function() {
-        $("#timer-queue").append("<span class='label label-primary'>10</span>");
-        });
+    $("#timer-queue").append("<span class='label label-primary'>10</span>");
+});
+
+fifteen.addEventListener('click', function() {
+    $("#timer-queue").append("<span class='label label-primary'>15</span>");
+});
 
 twenty.addEventListener('click', function() {
-        $("#timer-queue").append("<span class='label label-primary'>20</span>");
-        });
+    $("#timer-queue").append("<span class='label label-primary'>20</span>");
+});
 
 startstop.addEventListener('click', function () {
-        if (count > 0) {
+    if (count > 0) {
         if (!started || pause) {
-        started = true;
-        pause = false;
-        timer();
+            started = true;
+            pause = false;
+            timer();
         } else {
-        pause = true
+            pause = true
         }
-        }
-        });
+    }
+});
 </script>
 </body>
 </html>
